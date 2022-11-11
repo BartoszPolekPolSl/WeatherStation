@@ -13,7 +13,13 @@ data class WeatherResponse(
     @SerializedName("humidity")
     val humidity: String,
     @SerializedName("rain")
-    val rain: String
+    val rain: String,
+    @SerializedName("description")
+    val description: String,
+    @SerializedName("city")
+    val city: String,
+    @SerializedName("date")
+    val date: String
 ) {
     fun toPresentationModel(): WeatherPresentationModel {
         return WeatherPresentationModel(
@@ -21,7 +27,10 @@ data class WeatherResponse(
             temperature = temperature,
             pressure = pressure,
             humidity = humidity,
-            rain = rain
+            rain = rain,
+            description = description,
+            city = city,
+            date = date
         )
     }
 }

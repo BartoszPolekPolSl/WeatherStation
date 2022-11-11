@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">WeatherStation</string>
     <string name="celsius">"\u00B0"</string>
+    <string name="weather_today">Weather today</string>
 </resources>

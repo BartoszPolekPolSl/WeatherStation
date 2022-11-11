@@ -1,4 +1,4 @@
-package com.example.weatherstation.presentation.components
+package com.example.weatherstation.presentation.ui.weather
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -23,7 +25,10 @@ fun HourlyWeather(
     presentationModel: HourlyWeatherPresentationModel,
     style: HourlyWeatherStyle = hourlyWeatherStyle()
 ) {
-    Column {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(horizontal = 30.dp)
+    ) {
         Text(
             text = presentationModel.time,
             style = style.timeTextStyle,
@@ -50,11 +55,13 @@ data class HourlyWeatherStyle(
 fun hourlyWeatherStyle(
     timeBottomPadding: Dp = 12.dp,
     timeTextStyle: TextStyle = textBold.copy(
+        color = Color.Black,
         fontSize = 14.sp,
         lineHeight = 14.sp
     ),
     temperatureTextStyle: TextStyle = textBold.copy(
-        fontSize = 40.sp,
+        color = Color.Black,
+        fontSize = 20.sp,
         lineHeight = 54.sp
     )
 ) = HourlyWeatherStyle(
@@ -63,8 +70,8 @@ fun hourlyWeatherStyle(
     temperatureTextStyle = temperatureTextStyle
 )
 
-val presentationModel =
-    HourlyWeatherPresentationModel(time = "00:00", icon = R.drawable.outline, temperature = "1")
+private val presentationModel =
+    HourlyWeatherPresentationModel(time = "11", icon = R.drawable.clouds_icon, temperature = "1")
 
 @Preview(showBackground = true, backgroundColor = 0x000000)
 @Composable

@@ -1,0 +1,55 @@
+package com.example.weatherstation.presentation.ui.weather
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.weatherstation.R
+import com.example.weatherstation.domain.weather.HourlyWeatherPresentationModel
+import com.example.weatherstation.presentation.ui.styles.textBold
+
+@Composable
+fun BottomSheetContent(style: BottomSheetContentStyle = bottomSheetContentStyle()) {
+    Column(Modifier.fillMaxWidth()) {
+        Text(
+            text = stringResource(R.string.weather_today),
+            style = style.headerTextStyle,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(vertical = style.headerVerticalPadding)
+        )
+        BottomSheetWeatherSlider(hourlyWeatherPresentationModels)
+    }
+}
+
+data class BottomSheetContentStyle(
+    val headerTextStyle: TextStyle,
+    val headerVerticalPadding: Dp
+)
+
+@Composable
+fun bottomSheetContentStyle(
+    headerTextStyle: TextStyle = textBold.copy(
+        fontSize = 18.sp,
+        color = Color.Gray
+    ), headerVerticalPadding: Dp = 10.dp
+) = BottomSheetContentStyle(
+    headerTextStyle = headerTextStyle,
+    headerVerticalPadding = headerVerticalPadding
+)
+
+private val hourlyWeatherPresentationModels = listOf(
+    HourlyWeatherPresentationModel("11", R.drawable.sun_icon, "22"),
+    HourlyWeatherPresentationModel("12", R.drawable.clouds_icon, "22"),
+    HourlyWeatherPresentationModel("13", R.drawable.sun_icon, "22"),
+    HourlyWeatherPresentationModel("14", R.drawable.clouds_icon, "22"),
+)

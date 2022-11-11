@@ -5,5 +5,8 @@ data class WeatherPresentationModel(
     val temperature: String,
     val pressure: String,
     val humidity: String,
-    val rain: String
+    val rain: String,
+    val description: String,
+    val city: String,
+    val date: String,
 )
