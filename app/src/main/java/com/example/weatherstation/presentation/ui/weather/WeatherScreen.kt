@@ -5,24 +5,44 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.weatherstation.domain.weather.HourlyWeatherPresentationModel
 import com.example.weatherstation.domain.weather.WeatherPresentationModel
+import com.example.weatherstation.presentation.ui.weather.components.BottomSheetContent
+import com.example.weatherstation.presentation.ui.weather.components.MainContent
+import com.patrykandpatryk.vico.core.entry.ChartEntryModelProducer
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun WeatherScreen(style: WeatherScreenStyle = weatherScreenStyle()) {
+fun WeatherScreen(
+    presentationModel: WeatherPresentationModel,
+    hourlyWeatherPresentationModels: List<HourlyWeatherPresentationModel>,
+    chartStepEntryModerProducer: ChartEntryModelProducer,
+    style: WeatherScreenStyle = weatherScreenStyle()
+) {
     BottomSheetScaffold(
-        sheetContent = { BottomSheetContent() },
+        sheetContent = {
+            BottomSheetContent(
+                hourlyWeatherPresentationModels,
+                chartStepEntryModerProducer
+            )
+        },
         sheetShape = style.bottomSheetShape,
-        sheetPeekHeight = style.sheetPeekHeight
+        sheetPeekHeight = style.sheetPeekHeight,
+        sheetBackgroundColor = style.sheetBackgroundColor
     ) {
         MainContent(presentationModel = presentationModel)
     }
 }
 
-data class WeatherScreenStyle(val bottomSheetShape: CornerBasedShape, val sheetPeekHeight: Dp)
+data class WeatherScreenStyle(
+    val bottomSheetShape: CornerBasedShape,
+    val sheetPeekHeight: Dp,
+    val sheetBackgroundColor: Color
+)
 
 @Composable
 fun weatherScreenStyle(
@@ -30,16 +50,10 @@ fun weatherScreenStyle(
         topStart = 20.dp,
         topEnd = 20.dp
     ),
-    sheetPeekHeight: Dp = 150.dp
-) = WeatherScreenStyle(bottomSheetShape = bottomSheetShape, sheetPeekHeight = sheetPeekHeight)
-
-private val presentationModel = WeatherPresentationModel(
-    time = "00:00",
-    temperature = "1",
-    pressure = "1000",
-    humidity = "80",
-    rain = "yes",
-    description = "little windy today, dress warmly",
-    city = "Katowice",
-    date = "tue. 01.11"
+    sheetPeekHeight: Dp = 150.dp,
+    sheetBackgroundColor: Color = Color.White
+) = WeatherScreenStyle(
+    bottomSheetShape = bottomSheetShape,
+    sheetPeekHeight = sheetPeekHeight,
+    sheetBackgroundColor = sheetBackgroundColor
 )

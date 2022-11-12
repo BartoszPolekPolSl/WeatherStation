@@ -1,11 +1,10 @@
-package com.example.weatherstation.presentation.ui.weather
+package com.example.weatherstation.presentation.ui.components
 
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,8 +12,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,13 +37,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.weatherstation.R
 import com.example.weatherstation.presentation.ui.styles.textBlack
 import com.example.weatherstation.presentation.ui.theme.BackgroundIndicatorColor
 import com.example.weatherstation.presentation.ui.theme.ForegroundIndicatorColor
 
 @Composable
 fun CircularIndicator(
-    canvasSize: Dp = 80.dp,
+    canvasSize: Dp = 100.dp,
     indicatorValue: Int = 0,
     maxIndicatorValue: Int = 100,
     backgroundIndicatorStrokeWidth: Float = 20f,
@@ -74,6 +76,7 @@ fun CircularIndicator(
 
     Column(
         modifier = Modifier
+            .padding(horizontal = style.horizontalPadding)
             .size(canvasSize)
             .drawBehind {
                 val componentSize = size / 1.25f
@@ -88,7 +91,7 @@ fun CircularIndicator(
                     indicatorColor = style.foregroundIndicatorColor,
                     indicatorStrokeWidth = foregroundIndicatorStrokeWidth,
                 )
-            },
+            }
         /*        horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center*/
     ) {
@@ -98,7 +101,7 @@ fun CircularIndicator(
             minIndicator = minIndicator,
             maxIndicator = maxIndicator,
             icon = icon,
-            style = style
+            style = style.indicatorContentStyle
         )
     }
 }
@@ -153,13 +156,23 @@ private fun IndicatorContent(
     mainText: Int,
     minIndicator: String,
     maxIndicator: String,
-    style: CircularIndicatorStyle,
+    style: IndicatorContentStyle = indicatorContentStyle(),
     subText: String? = null,
-    @DrawableRes icon: Int? = null
+    @DrawableRes icon: Int? = null,
 ) {
-    Box(Modifier.fillMaxSize()) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .padding(
+                start = style.horizontalPadding,
+                top = style.topPadding,
+                end = style.horizontalPadding
+            )
+    ) {
         Column(
-            Modifier.align(Alignment.Center),
+            Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = mainText.toString(), style = style.textStyle)
@@ -169,23 +182,45 @@ private fun IndicatorContent(
                     style = style.textStyle
                 )
             }
-            Row(
-                horizontalArrangement = Arrangement.SpaceAround,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 2.dp)
-            ) {
-                Text(text = minIndicator, style = style.textStyle)
-                if (icon != null) {
-                    Image(painter = painterResource(icon), contentDescription = null)
-                } else {
-                    Spacer(Modifier)
-                }
-                Text(text = maxIndicator, style = style.textStyle)
-            }
+            MinMaxIndicatorSection(
+                minIndicator = minIndicator,
+                maxIndicator = maxIndicator,
+                icon = icon,
+                style = style.minMaxIndicatorSectionStyle
+            )
         }
     }
+}
 
+@Composable
+fun MinMaxIndicatorSection(
+    minIndicator: String,
+    maxIndicator: String,
+    @DrawableRes icon: Int? = null,
+    style: MinMaxIndicatorSectionStyle = minMaxIndicatorSectionStyle()
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = style.startPadding)
+            .offset(y = style.yOffset)
+    ) {
+        Text(text = minIndicator, style = style.textStyle)
+        if (icon != null) {
+            Icon(
+                modifier = Modifier
+                    .size(style.iconSize)
+                    .weight(1f),
+                painter = painterResource(icon),
+                tint = style.iconColor,
+                contentDescription = null
+            )
+        } else {
+            Spacer(Modifier.weight(1f))
+        }
+        Text(text = maxIndicator, style = style.textStyle)
+    }
 }
 
 data class CircularIndicatorStyle(
@@ -194,7 +229,9 @@ data class CircularIndicatorStyle(
     val contentTopPadding: Dp,
     val contentBottomPadding: Dp,
     val rowIndicatorStartPadding: Dp,
-    val textStyle: TextStyle
+    val textStyle: TextStyle,
+    val horizontalPadding: Dp,
+    val indicatorContentStyle: IndicatorContentStyle
 )
 
 @Composable
@@ -204,13 +241,60 @@ fun circularIndicatorStyle(
     contentTopPadding: Dp = 120.dp,
     contentBottomPadding: Dp = 55.dp,
     rowIndicatorStartPadding: Dp = 5.dp,
-    textStyle: TextStyle = textBlack
+    textStyle: TextStyle = textBlack,
+    horizontalPadding: Dp = 8.dp,
+    indicatorContentStyle: IndicatorContentStyle = indicatorContentStyle()
 ) = CircularIndicatorStyle(
     backgroundIndicatorColor = backgroundIndicatorColor,
     foregroundIndicatorColor = foregroundIndicatorColor,
     contentTopPadding = contentTopPadding,
     contentBottomPadding = contentBottomPadding,
     rowIndicatorStartPadding = rowIndicatorStartPadding,
+    textStyle = textStyle,
+    horizontalPadding = horizontalPadding,
+    indicatorContentStyle = indicatorContentStyle
+)
+
+data class IndicatorContentStyle(
+    val horizontalPadding: Dp,
+    val topPadding: Dp,
+    val textStyle: TextStyle,
+    val minMaxIndicatorSectionStyle: MinMaxIndicatorSectionStyle,
+)
+
+@Composable
+fun indicatorContentStyle(
+    horizontalPadding: Dp = 10.dp,
+    topPadding: Dp = 10.dp,
+    textStyle: TextStyle = textBlack,
+    minMaxIndicatorSectionStyle: MinMaxIndicatorSectionStyle = minMaxIndicatorSectionStyle(),
+) = IndicatorContentStyle(
+    horizontalPadding = horizontalPadding,
+    topPadding = topPadding,
+    textStyle = textStyle,
+    minMaxIndicatorSectionStyle = minMaxIndicatorSectionStyle
+)
+
+data class MinMaxIndicatorSectionStyle(
+    val startPadding: Dp,
+    val yOffset: Dp,
+    val textStyle: TextStyle,
+    val iconSize: Dp,
+    val iconColor: Color
+)
+
+@Composable
+fun minMaxIndicatorSectionStyle(
+    startPadding: Dp = 2.dp,
+    yOffset: Dp = 13.dp,
+    iconSize: Dp = 16.dp,
+    iconColor: Color = BackgroundIndicatorColor,
+    textStyle: TextStyle = textBlack
+) = MinMaxIndicatorSectionStyle(
+    startPadding = startPadding,
+    yOffset = yOffset,
+    iconSize = iconSize,
+    iconColor = iconColor,
     textStyle = textStyle
 )
 
@@ -220,7 +304,8 @@ fun CircularIndicatorPreview() {
     CircularIndicator(
         indicatorValue = 100,
         subText = "hPa",
-        minIndicator = "0",
-        maxIndicator = "100"
+        minIndicator = "950",
+        maxIndicator = "0",
+        icon = R.drawable.sun_icon
     )
 }

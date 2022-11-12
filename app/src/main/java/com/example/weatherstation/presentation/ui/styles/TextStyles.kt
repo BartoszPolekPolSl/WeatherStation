@@ -52,7 +52,7 @@ val textBlack
         fontFamily = mainFontFamily,
         fontWeight = FontWeight.Black,
         color = Color.White,
-        fontSize = 10.sp,
+        fontSize = 9.sp,
         letterSpacing = 0.16.sp,
         lineHeight = 12.sp
     )

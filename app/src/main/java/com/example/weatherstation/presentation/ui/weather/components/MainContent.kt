@@ -1,4 +1,4 @@
-package com.example.weatherstation.presentation.ui.weather
+package com.example.weatherstation.presentation.ui.weather.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherstation.R
 import com.example.weatherstation.domain.weather.WeatherPresentationModel
+import com.example.weatherstation.presentation.ui.components.CircularIndicator
 import com.example.weatherstation.presentation.ui.styles.textBold
 import com.example.weatherstation.presentation.ui.styles.textMedium
 import com.example.weatherstation.presentation.ui.theme.MainBackground
@@ -44,24 +45,51 @@ fun MainContent(
             Modifier.offset(y = style.informationSectionOffset),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row {
-                Text(
-                    text = presentationModel.temperature,
-                    style = style.temperatureTextStyle
-                )
-                Text(
-                    text = stringResource(R.string.celsius),
-                    style = style.temperatureTextStyle
-                )
-            }
-            Text(text = presentationModel.city, style = style.cityTextStyle)
-            Text(text = presentationModel.date, style = style.dateTextStyle)
-            Text(
-                text = presentationModel.description,
-                style = style.descriptionTextStyle,
-                modifier = Modifier.padding(top = style.descriptionTopPadding)
-            )
+            InformationSection(presentationModel = presentationModel, style = style)
+            IndicatorsSection()
         }
+    }
+}
+
+@Composable
+fun InformationSection(presentationModel: WeatherPresentationModel, style: MainContentStyle) {
+    Row {
+        Text(
+            text = presentationModel.temperature,
+            style = style.temperatureTextStyle
+        )
+        Text(
+            text = stringResource(R.string.celsius),
+            style = style.temperatureTextStyle
+        )
+    }
+    Text(text = presentationModel.city, style = style.cityTextStyle)
+    Text(text = presentationModel.date, style = style.dateTextStyle)
+    Text(
+        text = presentationModel.description,
+        style = style.descriptionTextStyle,
+        modifier = Modifier.padding(top = style.descriptionTopPadding)
+    )
+}
+
+@Composable
+fun IndicatorsSection() {
+    Row() {
+        CircularIndicator(
+            minIndicator = "950",
+            maxIndicator = "1050",
+            icon = R.drawable.sun_icon,
+            indicatorValue = 1000,
+            maxIndicatorValue = 1050,
+            subText = "hPa"
+        )
+        CircularIndicator(
+            minIndicator = "0",
+            maxIndicator = "100",
+            indicatorValue = 80,
+            subText = "%",
+            maxIndicatorValue = 1050
+        )
     }
 }
 

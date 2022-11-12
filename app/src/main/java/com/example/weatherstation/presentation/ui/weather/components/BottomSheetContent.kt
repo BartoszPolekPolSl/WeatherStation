@@ -1,8 +1,10 @@
-package com.example.weatherstation.presentation.ui.weather
+package com.example.weatherstation.presentation.ui.weather.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,10 +18,20 @@ import androidx.compose.ui.unit.sp
 import com.example.weatherstation.R
 import com.example.weatherstation.domain.weather.HourlyWeatherPresentationModel
 import com.example.weatherstation.presentation.ui.styles.textBold
+import com.example.weatherstation.presentation.ui.weather.WeatherChart
+import com.patrykandpatryk.vico.core.entry.ChartEntryModelProducer
 
 @Composable
-fun BottomSheetContent(style: BottomSheetContentStyle = bottomSheetContentStyle()) {
-    Column(Modifier.fillMaxWidth()) {
+fun BottomSheetContent(
+    hourlyWeatherPresentationModels: List<HourlyWeatherPresentationModel>,
+    chartStepEntryModerProducer: ChartEntryModelProducer,
+    style: BottomSheetContentStyle = bottomSheetContentStyle()
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
         Text(
             text = stringResource(R.string.weather_today),
             style = style.headerTextStyle,
@@ -28,6 +40,16 @@ fun BottomSheetContent(style: BottomSheetContentStyle = bottomSheetContentStyle(
                 .padding(vertical = style.headerVerticalPadding)
         )
         BottomSheetWeatherSlider(hourlyWeatherPresentationModels)
+        WeatherChart(chartEntryModelProducer = chartStepEntryModerProducer)
+    }
+}
+
+@Composable
+fun BottomSheetWeatherSlider(hourlyWeatherPresentationModels: List<HourlyWeatherPresentationModel>) {
+    LazyRow(Modifier.fillMaxWidth()) {
+        items(hourlyWeatherPresentationModels) { item ->
+            HourlyWeather(item)
+        }
     }
 }
 
@@ -45,11 +67,4 @@ fun bottomSheetContentStyle(
 ) = BottomSheetContentStyle(
     headerTextStyle = headerTextStyle,
     headerVerticalPadding = headerVerticalPadding
-)
-
-private val hourlyWeatherPresentationModels = listOf(
-    HourlyWeatherPresentationModel("11", R.drawable.sun_icon, "22"),
-    HourlyWeatherPresentationModel("12", R.drawable.clouds_icon, "22"),
-    HourlyWeatherPresentationModel("13", R.drawable.sun_icon, "22"),
-    HourlyWeatherPresentationModel("14", R.drawable.clouds_icon, "22"),
 )
