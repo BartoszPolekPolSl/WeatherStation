@@ -1,4 +1,4 @@
-package com.example.weatherstation.presentation.ui.weather.components
+package com.example.weatherstation.presentation.ui.functionalities.weather.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherstation.R
-import com.example.weatherstation.domain.weather.HourlyWeatherPresentationModel
+import com.example.weatherstation.data.model.weather.HourlyWeatherPresentationModel
+import com.example.weatherstation.presentation.ui.functionalities.weather.WeatherChart
 import com.example.weatherstation.presentation.ui.styles.textBold
-import com.example.weatherstation.presentation.ui.weather.WeatherChart
 import com.patrykandpatryk.vico.core.entry.ChartEntryModelProducer
 
 @Composable

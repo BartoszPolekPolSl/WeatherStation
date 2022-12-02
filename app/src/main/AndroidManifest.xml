@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".WeatherApp"
         android:allowBackup="true"
@@ -11,13 +11,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.WeatherStation"
-        tools:targetApi="31">
+        android:theme="@style/Theme.WeatherStation">
         <activity
-            android:name=".presentation.ui.weather.WeatherActivity"
+            android:name=".presentation.ui.functionalities.weather.WeatherActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.WeatherStation">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.WeatherStation"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,6 +28,14 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <activity
+            android:name=".presentation.ui.functionalities.settings.SettingsActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.WeatherStation"
+            tools:ignore="LockedOrientationActivity" />
     </application>
 
 </manifest>

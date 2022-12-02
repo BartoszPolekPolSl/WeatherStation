@@ -1,4 +1,4 @@
-package com.example.weatherstation.presentation.ui.weather
+package com.example.weatherstation.presentation.ui.functionalities.weather
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -8,7 +8,7 @@ import com.example.weatherstation.presentation.ui.components.marker
 import com.patrykandpatryk.vico.compose.axis.horizontal.bottomAxis
 import com.patrykandpatryk.vico.compose.axis.vertical.startAxis
 import com.patrykandpatryk.vico.compose.chart.Chart
-import com.patrykandpatryk.vico.compose.chart.column.columnChart
+import com.patrykandpatryk.vico.compose.chart.line.lineChart
 import com.patrykandpatryk.vico.core.entry.ChartEntryModelProducer
 
 @Composable
@@ -21,7 +21,7 @@ fun WeatherChart(
         valueFormatter = IntFormatAxisValueFormatter(),
         axis = null
     )
-    val columnChart = columnChart(
+    val columnChart = lineChart(
     )
     Chart(
         modifier = modifier,

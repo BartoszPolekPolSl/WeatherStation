@@ -1,4 +1,4 @@
-package com.example.weatherstation.presentation.ui.weather.components
+package com.example.weatherstation.presentation.ui.functionalities.weather.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherstation.R
-import com.example.weatherstation.domain.weather.HourlyWeatherPresentationModel
+import com.example.weatherstation.data.model.weather.HourlyWeatherPresentationModel
 import com.example.weatherstation.presentation.ui.styles.textBold
 
 @Composable
@@ -40,7 +40,7 @@ fun HourlyWeather(
                 text = presentationModel.temperature,
                 style = style.temperatureTextStyle
             )
-            Text(text = stringResource(R.string.celsius), style = style.temperatureTextStyle)
+            Text(text = stringResource(R.string.degree_sign), style = style.temperatureTextStyle)
         }
     }
 }

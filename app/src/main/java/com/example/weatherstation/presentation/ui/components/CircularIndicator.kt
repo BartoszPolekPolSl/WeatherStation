@@ -3,7 +3,6 @@ package com.example.weatherstation.presentation.ui.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,43 +33,42 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.weatherstation.R
+import com.example.weatherstation.data.util.Units
 import com.example.weatherstation.presentation.ui.styles.textBlack
 import com.example.weatherstation.presentation.ui.theme.BackgroundIndicatorColor
 import com.example.weatherstation.presentation.ui.theme.ForegroundIndicatorColor
+import com.example.weatherstation.presentation.ui.util.getFormattedString
 
 @Composable
 fun CircularIndicator(
     canvasSize: Dp = 100.dp,
-    indicatorValue: Int = 0,
-    maxIndicatorValue: Int = 100,
+    indicatorValue: Float = 0f,
+    unit: Units,
     backgroundIndicatorStrokeWidth: Float = 20f,
     foregroundIndicatorStrokeWidth: Float = 20f,
-    minIndicator: String,
-    maxIndicator: String,
     @DrawableRes icon: Int? = null,
     subText: String? = null,
     style: CircularIndicatorStyle = circularIndicatorStyle()
 ) {
+    val minIndicatorValue = unit.minMaxValue.first
+    val maxIndicatorValue = unit.minMaxValue.second
     var animatedIndicatorValue by remember {
-        mutableStateOf(0f)
+        mutableStateOf(minIndicatorValue)
     }
     LaunchedEffect(indicatorValue) {
-        animatedIndicatorValue = indicatorValue.toFloat()
+        animatedIndicatorValue = if (indicatorValue == 0f) minIndicatorValue else indicatorValue
     }
 
-    val percentage = (animatedIndicatorValue / maxIndicatorValue) * 100
+    val percentage = if (indicatorValue < minIndicatorValue || indicatorValue > maxIndicatorValue) {
+        0f
+    } else {
+        ((animatedIndicatorValue - minIndicatorValue) / (maxIndicatorValue - minIndicatorValue)) * 100f
+    }
 
     val sweepAngle by animateFloatAsState(
         targetValue = (2.4 * percentage).toFloat(),
-        animationSpec = tween(1000)
-    )
-
-    val receivedValue by animateIntAsState(
-        targetValue = animatedIndicatorValue.toInt(),
         animationSpec = tween(1000)
     )
 
@@ -92,14 +90,12 @@ fun CircularIndicator(
                     indicatorStrokeWidth = foregroundIndicatorStrokeWidth,
                 )
             }
-        /*        horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center*/
     ) {
         IndicatorContent(
-            mainText = receivedValue,
+            mainText = indicatorValue,
             subText = subText,
-            minIndicator = minIndicator,
-            maxIndicator = maxIndicator,
+            minIndicator = minIndicatorValue.getFormattedString(),
+            maxIndicator = maxIndicatorValue.getFormattedString(),
             icon = icon,
             style = style.indicatorContentStyle
         )
@@ -153,7 +149,7 @@ fun DrawScope.foregroundIndicator(
 
 @Composable
 private fun IndicatorContent(
-    mainText: Int,
+    mainText: Float,
     minIndicator: String,
     maxIndicator: String,
     style: IndicatorContentStyle = indicatorContentStyle(),
@@ -175,12 +171,22 @@ private fun IndicatorContent(
                 .align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = mainText.toString(), style = style.textStyle)
-            if (!subText.isNullOrEmpty()) {
-                Text(
-                    text = subText,
-                    style = style.textStyle
-                )
+            if (mainText != 0f) {
+                Text(text = mainText.getFormattedString(), style = style.textStyle)
+                if (!subText.isNullOrEmpty()) {
+                    Text(
+                        text = subText,
+                        style = style.textStyle
+                    )
+                }
+            } else {
+                Text(text = "N/A", style = style.textStyle)
+                if (!subText.isNullOrEmpty()) {
+                    Text(
+                        text = subText,
+                        style = style.textStyle
+                    )
+                }
             }
             MinMaxIndicatorSection(
                 minIndicator = minIndicator,
@@ -298,14 +304,15 @@ fun minMaxIndicatorSectionStyle(
     textStyle = textStyle
 )
 
+/*
 @Preview(showBackground = true, backgroundColor = 0x4298FF)
 @Composable
 fun CircularIndicatorPreview() {
     CircularIndicator(
-        indicatorValue = 100,
+        indicatorValue = 100f,
         subText = "hPa",
         minIndicator = "950",
         maxIndicator = "0",
         icon = R.drawable.sun_icon
     )
-}
+}*/

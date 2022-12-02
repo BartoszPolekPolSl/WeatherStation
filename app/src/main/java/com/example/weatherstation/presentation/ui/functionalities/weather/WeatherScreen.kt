@@ -1,4 +1,4 @@
-package com.example.weatherstation.presentation.ui.weather
+package com.example.weatherstation.presentation.ui.functionalities.weather
 
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -8,19 +8,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.weatherstation.domain.weather.HourlyWeatherPresentationModel
-import com.example.weatherstation.domain.weather.WeatherPresentationModel
-import com.example.weatherstation.presentation.ui.weather.components.BottomSheetContent
-import com.example.weatherstation.presentation.ui.weather.components.MainContent
+import com.example.weatherstation.data.model.weather.HourlyWeatherPresentationModel
+import com.example.weatherstation.data.model.weather.WeatherPresentationModel
+import com.example.weatherstation.presentation.ui.functionalities.weather.components.BottomSheetContent
+import com.example.weatherstation.presentation.ui.functionalities.weather.components.WeatherMainContent
 import com.patrykandpatryk.vico.core.entry.ChartEntryModelProducer
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WeatherScreen(
-    presentationModel: WeatherPresentationModel,
+    presentationModel: WeatherPresentationModel?,
     hourlyWeatherPresentationModels: List<HourlyWeatherPresentationModel>,
     chartStepEntryModerProducer: ChartEntryModelProducer,
+    onSettingsClick: () -> Unit,
+    onRefresh: () -> Unit,
+    isRefreshing: Boolean,
     style: WeatherScreenStyle = weatherScreenStyle()
 ) {
     BottomSheetScaffold(
@@ -34,9 +37,15 @@ fun WeatherScreen(
         sheetPeekHeight = style.sheetPeekHeight,
         sheetBackgroundColor = style.sheetBackgroundColor
     ) {
-        MainContent(presentationModel = presentationModel)
+        WeatherMainContent(
+            presentationModel = presentationModel,
+            onSettingsClick = onSettingsClick,
+            onRefresh = onRefresh,
+            isRefreshing = isRefreshing
+        )
     }
 }
+
 
 data class WeatherScreenStyle(
     val bottomSheetShape: CornerBasedShape,

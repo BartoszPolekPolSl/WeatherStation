@@ -1,4 +1,4 @@
-package com.example.weatherstation.domain.weather
+package com.example.weatherstation.data.model.weather
 
 import androidx.annotation.DrawableRes
 
