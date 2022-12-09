@@ -53,6 +53,11 @@ fun BottomSheetWeatherSlider(hourlyWeatherPresentationModels: List<HourlyWeather
     }
 }
 
+@Composable
+fun MapPage() {
+
+}
+
 data class BottomSheetContentStyle(
     val headerTextStyle: TextStyle,
     val headerVerticalPadding: Dp

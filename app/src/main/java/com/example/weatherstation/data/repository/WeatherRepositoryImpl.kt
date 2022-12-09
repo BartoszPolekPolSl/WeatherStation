@@ -1,6 +1,7 @@
 package com.example.weatherstation.data.repository
 
 import android.content.SharedPreferences
+import com.example.weatherstation.data.dto.Station
 import com.example.weatherstation.data.model.settings.Parameters
 import com.example.weatherstation.data.model.weather.WeatherPresentationModel
 import com.example.weatherstation.data.rest.WeatherApi
@@ -35,6 +36,18 @@ class WeatherRepositoryImpl @Inject constructor(
                         )!!
                     )!!.requestParameter
                 ).toPresentationModel()
+            )
+        } catch (e: IOException) {
+            Resource.Error("You might not have intent connection")
+        } catch (e: HttpException) {
+            Resource.Error("Unexpected response")
+        }
+    }
+
+    override suspend fun getStations(): Resource<List<Station>> {
+        return try {
+            Resource.Success(
+                api.getStations()
             )
         } catch (e: IOException) {
             Resource.Error("You might not have intent connection")

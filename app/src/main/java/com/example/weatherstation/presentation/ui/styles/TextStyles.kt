@@ -45,7 +45,7 @@ val textMedium
         lineHeight = 24.sp
     )
 
-val textBlack
+val textSmall
     @Composable
     @ReadOnlyComposable
     get() = TextStyle(

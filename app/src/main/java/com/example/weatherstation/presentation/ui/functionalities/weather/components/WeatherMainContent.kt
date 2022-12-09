@@ -3,7 +3,6 @@ package com.example.weatherstation.presentation.ui.functionalities.weather.compo
 import android.content.SharedPreferences
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherstation.R
+import com.example.weatherstation.data.dto.Station
 import com.example.weatherstation.data.model.settings.Parameters
 import com.example.weatherstation.data.model.weather.WeatherPresentationModel
 import com.example.weatherstation.data.util.Units
@@ -37,51 +34,51 @@ import com.example.weatherstation.presentation.ui.theme.MainBackground
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WeatherMainContent(
-    presentationModel: WeatherPresentationModel?,
+    stations: List<Station>,
+    onQueryChange: (String) -> Unit,
+    query: String,
+    onStationClick: (Int) -> Unit,
+    weatherPresentationModel: WeatherPresentationModel?,
     onRefresh: () -> Unit,
     isRefreshing: Boolean,
     onSettingsClick: () -> Unit,
     style: WeatherMainContentStyle = weatherMainContentStyle()
 ) {
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, { onRefresh() })
-    Box(Modifier.pullRefresh(pullRefreshState)) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(style.backgroundColor),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            item {
-                TopBar { onSettingsClick() }
-                Image(
-                    painter = painterResource(R.drawable.sun),
-                    contentDescription = null,
-                    modifier = Modifier.padding(top = style.weatherImageTopPadding)
-                )
-                presentationModel?.let {
-                    Column(
-                        Modifier.offset(y = style.informationSectionOffset),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        InformationSection(presentationModel = presentationModel, style = style)
-                        IndicatorsSection(
-                            Pair(
-                                readUnit(
-                                    Parameters.PRESSURE,
-                                    LocalSharedPreferencesProvider.current
-                                ), presentationModel.pressure
-                            ),
-                            Pair(Units.PERCENT, presentationModel.humidity)
-                        )
-                    }
+
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(style.backgroundColor),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        item {
+            Image(
+                painter = painterResource(R.drawable.sun),
+                contentDescription = null,
+                modifier = Modifier.padding(top = style.weatherImageTopPadding)
+            )
+            weatherPresentationModel?.let {
+                Column(
+                    Modifier.offset(y = style.informationSectionOffset),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    InformationSection(
+                        presentationModel = weatherPresentationModel,
+                        style = style
+                    )
+                    IndicatorsSection(
+                        Pair(
+                            readUnit(
+                                Parameters.PRESSURE,
+                                LocalSharedPreferencesProvider.current
+                            ), weatherPresentationModel.pressure
+                        ),
+                        Pair(Units.PERCENT, weatherPresentationModel.humidity)
+                    )
                 }
             }
         }
-        PullRefreshIndicator(
-            isRefreshing,
-            pullRefreshState,
-            Modifier.align(Alignment.TopCenter)
-        )
     }
 }
 

@@ -36,7 +36,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.weatherstation.data.util.Units
-import com.example.weatherstation.presentation.ui.styles.textBlack
+import com.example.weatherstation.presentation.ui.styles.textSmall
 import com.example.weatherstation.presentation.ui.theme.BackgroundIndicatorColor
 import com.example.weatherstation.presentation.ui.theme.ForegroundIndicatorColor
 import com.example.weatherstation.presentation.ui.util.getFormattedString
@@ -247,7 +247,7 @@ fun circularIndicatorStyle(
     contentTopPadding: Dp = 120.dp,
     contentBottomPadding: Dp = 55.dp,
     rowIndicatorStartPadding: Dp = 5.dp,
-    textStyle: TextStyle = textBlack,
+    textStyle: TextStyle = textSmall,
     horizontalPadding: Dp = 8.dp,
     indicatorContentStyle: IndicatorContentStyle = indicatorContentStyle()
 ) = CircularIndicatorStyle(
@@ -272,7 +272,7 @@ data class IndicatorContentStyle(
 fun indicatorContentStyle(
     horizontalPadding: Dp = 10.dp,
     topPadding: Dp = 10.dp,
-    textStyle: TextStyle = textBlack,
+    textStyle: TextStyle = textSmall,
     minMaxIndicatorSectionStyle: MinMaxIndicatorSectionStyle = minMaxIndicatorSectionStyle(),
 ) = IndicatorContentStyle(
     horizontalPadding = horizontalPadding,
@@ -295,7 +295,7 @@ fun minMaxIndicatorSectionStyle(
     yOffset: Dp = 13.dp,
     iconSize: Dp = 16.dp,
     iconColor: Color = BackgroundIndicatorColor,
-    textStyle: TextStyle = textBlack
+    textStyle: TextStyle = textSmall
 ) = MinMaxIndicatorSectionStyle(
     startPadding = startPadding,
     yOffset = yOffset,

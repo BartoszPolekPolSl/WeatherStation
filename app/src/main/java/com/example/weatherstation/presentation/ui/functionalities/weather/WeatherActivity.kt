@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import com.example.weatherstation.R
 import com.example.weatherstation.data.model.weather.HourlyWeatherPresentationModel
 import com.example.weatherstation.data.model.weather.WeatherPresentationModel
@@ -33,11 +34,15 @@ class WeatherActivity : ComponentActivity() {
                 WeatherStationTheme {
                     val chartStepEntryModelProducer = ChartEntryModelProducer()
                     WeatherScreen(
+                        stations = viewModel.searchResult.collectAsState().value ?: listOf(),
+                        onQueryChange = { viewModel.onSearchQueryChange(it) },
+                        query = viewModel.query.value,
+                        onStationClick = { viewModel.onStationClick(it) },
                         presentationModel = viewModel.mainWeatherDataResponse.weather,
                         hourlyWeatherPresentationModels = hourlyWeatherPresentationModels,
                         chartStepEntryModerProducer = chartStepEntryModelProducer,
                         onSettingsClick = { onSettingsClick() },
-                        onRefresh = { viewModel.loadWeather() },
+                        onRefresh = { viewModel.loadWeather(viewModel.currentStation) },
                         isRefreshing = viewModel.mainWeatherDataResponse.isLoading
                     )
                     chartStepEntryModelProducer.setEntries(
@@ -59,7 +64,8 @@ class WeatherActivity : ComponentActivity() {
                 }
             }
         }
-        viewModel.loadWeather()
+        viewModel.loadWeather(viewModel.currentStation)
+        viewModel.loadStations()
     }
 
     private fun onSettingsClick() {
