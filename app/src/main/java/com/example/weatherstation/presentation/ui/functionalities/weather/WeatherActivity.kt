@@ -1,16 +1,18 @@
 package com.example.weatherstation.presentation.ui.functionalities.weather
 
+import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import com.example.weatherstation.R
 import com.example.weatherstation.data.model.weather.HourlyWeatherPresentationModel
-import com.example.weatherstation.data.model.weather.WeatherPresentationModel
 import com.example.weatherstation.presentation.LocalSharedPreferencesProvider
 import com.example.weatherstation.presentation.ui.functionalities.settings.SettingsActivity
 import com.example.weatherstation.presentation.ui.theme.WeatherStationTheme
@@ -35,14 +37,17 @@ class WeatherActivity : ComponentActivity() {
                     val chartStepEntryModelProducer = ChartEntryModelProducer()
                     WeatherScreen(
                         stations = viewModel.searchResult.collectAsState().value ?: listOf(),
+                        currentStation = viewModel.currentStation,
                         onQueryChange = { viewModel.onSearchQueryChange(it) },
+                        onClearIconClick = { viewModel.clearQuery() },
                         query = viewModel.query.value,
+                        clearQuery = { viewModel.clearQuery() },
                         onStationClick = { viewModel.onStationClick(it) },
-                        presentationModel = viewModel.mainWeatherDataResponse.weather,
+                        weatherResponse = viewModel.mainWeatherDataResponse.weather,
                         hourlyWeatherPresentationModels = hourlyWeatherPresentationModels,
-                        chartStepEntryModerProducer = chartStepEntryModelProducer,
+                        historyState = viewModel.historyResponse,
                         onSettingsClick = { onSettingsClick() },
-                        onRefresh = { viewModel.loadWeather(viewModel.currentStation) },
+                        onRefresh = { viewModel.loadWeather() },
                         isRefreshing = viewModel.mainWeatherDataResponse.isLoading
                     )
                     chartStepEntryModelProducer.setEntries(
@@ -64,15 +69,23 @@ class WeatherActivity : ComponentActivity() {
                 }
             }
         }
-        viewModel.loadWeather(viewModel.currentStation)
         viewModel.loadStations()
     }
 
     private fun onSettingsClick() {
-        startActivity(Intent(this, SettingsActivity::class.java))
+        startForResult.launch(Intent(this, SettingsActivity::class.java))
     }
 
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+        { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewModel.loadWeather()
+            }
+
+        }
 }
+
 /*@Preview(showBackground = true)
 @Composable
 fun ScreenPreview() {
@@ -80,19 +93,6 @@ fun ScreenPreview() {
         WeatherScreen(presentationModel, hourlyWeatherPresentationModels)
     }
 }*/
-
-private val presentationModel = WeatherPresentationModel(
-    stationName = "Stacja 1",
-    time = "00:00",
-    temperature = "1",
-    pressure = 1000f,
-    humidity = 80f,
-    rain = "yes",
-    description = "little windy today, dress warmly",
-    localization = "Katowice",
-    date = "tue. 01.11"
-)
-
 
 private val hourlyWeatherPresentationModels = listOf(
     HourlyWeatherPresentationModel("11", R.drawable.sun_icon, "22"),

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,9 +20,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weatherstation.R
-import com.example.weatherstation.data.dto.Station
+import com.example.weatherstation.data.dto.WeatherResponse
 import com.example.weatherstation.data.model.settings.Parameters
-import com.example.weatherstation.data.model.weather.WeatherPresentationModel
 import com.example.weatherstation.data.util.Units
 import com.example.weatherstation.presentation.LocalSharedPreferencesProvider
 import com.example.weatherstation.presentation.ui.components.CircularIndicator
@@ -31,21 +29,11 @@ import com.example.weatherstation.presentation.ui.styles.textBold
 import com.example.weatherstation.presentation.ui.styles.textMedium
 import com.example.weatherstation.presentation.ui.theme.MainBackground
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WeatherMainContent(
-    stations: List<Station>,
-    onQueryChange: (String) -> Unit,
-    query: String,
-    onStationClick: (Int) -> Unit,
-    weatherPresentationModel: WeatherPresentationModel?,
-    onRefresh: () -> Unit,
-    isRefreshing: Boolean,
-    onSettingsClick: () -> Unit,
+    weatherResponse: WeatherResponse?,
     style: WeatherMainContentStyle = weatherMainContentStyle()
 ) {
-
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -58,13 +46,13 @@ fun WeatherMainContent(
                 contentDescription = null,
                 modifier = Modifier.padding(top = style.weatherImageTopPadding)
             )
-            weatherPresentationModel?.let {
+            weatherResponse?.let {
                 Column(
                     Modifier.offset(y = style.informationSectionOffset),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     InformationSection(
-                        presentationModel = weatherPresentationModel,
+                        weatherResponse = weatherResponse,
                         style = style
                     )
                     IndicatorsSection(
@@ -72,9 +60,9 @@ fun WeatherMainContent(
                             readUnit(
                                 Parameters.PRESSURE,
                                 LocalSharedPreferencesProvider.current
-                            ), weatherPresentationModel.pressure
+                            ), weatherResponse.pressure
                         ),
-                        Pair(Units.PERCENT, weatherPresentationModel.humidity)
+                        Pair(Units.PERCENT, weatherResponse.humidity)
                     )
                 }
             }
@@ -93,20 +81,20 @@ private fun readUnit(parameters: Parameters, sharedPreferences: SharedPreference
 
 @Composable
 fun InformationSection(
-    presentationModel: WeatherPresentationModel,
+    weatherResponse: WeatherResponse,
     style: WeatherMainContentStyle
 ) {
     Row {
         Text(
-            text = presentationModel.temperature ?: "N/A",
+            text = weatherResponse.temperature ?: "N/A",
             style = style.temperatureTextStyle
         )
     }
-    Text(text = presentationModel.localization, style = style.cityTextStyle)
-    Text(text = presentationModel.date, style = style.dateTextStyle)
-    if (presentationModel.description != null) {
+    Text(text = weatherResponse.localization, style = style.cityTextStyle)
+    Text(text = weatherResponse.date, style = style.dateTextStyle)
+    if (weatherResponse.description != null) {
         Text(
-            text = presentationModel.description ?: "",
+            text = weatherResponse.description ?: "",
             style = style.descriptionTextStyle,
             modifier = Modifier.padding(top = style.descriptionTopPadding)
         )
@@ -135,13 +123,13 @@ fun IndicatorsSection(pressureValue: Pair<Units, Float?>, humidityValue: Pair<Un
             CircularIndicator(
                 unit = humidityValue.first,
                 indicatorValue = humidityValue.second!!,
-                subText = pressureValue.first.symbol,
+                subText = humidityValue.first.symbol,
             )
         } else {
             CircularIndicator(
                 unit = humidityValue.first,
                 indicatorValue = 0f,
-                subText = pressureValue.first.symbol,
+                subText = humidityValue.first.symbol,
             )
         }
 

@@ -1,6 +1,5 @@
 package com.example.weatherstation.data.dto
 
-import com.example.weatherstation.data.model.weather.WeatherPresentationModel
 import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(
@@ -29,18 +28,4 @@ data class WeatherResponse(
     @SerializedName("lon")
     val lon: Float
 
-) {
-    fun toPresentationModel(): WeatherPresentationModel {
-        return WeatherPresentationModel(
-            stationName = stationName,
-            time = time,
-            temperature = temperature,
-            pressure = pressure,
-            humidity = humidity,
-            rain = rain,
-            description = description,
-            localization = localization,
-            date = date
-        )
-    }
-}
+)

@@ -1,9 +1,9 @@
 package com.example.weatherstation.presentation.ui.functionalities.weather
 
-import com.example.weatherstation.data.model.weather.WeatherPresentationModel
+import com.example.weatherstation.data.dto.WeatherResponse
 
 data class WeatherState(
-    val weather: WeatherPresentationModel? = null,
+    val weather: WeatherResponse? = null,
     val isLoading: Boolean = false,
     val error: String? = null
 )

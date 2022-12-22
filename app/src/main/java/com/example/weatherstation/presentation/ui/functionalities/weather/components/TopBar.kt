@@ -19,7 +19,8 @@ fun TopBar(
     stations: List<Station>,
     query: String,
     onQueryChange: (String) -> Unit,
-    onStationClick: (Int) -> Unit,
+    onClearIconClick: () -> Unit,
+    onStationClick: (Station) -> Unit,
     onSettingsClick: () -> Unit
 ) {
     Row(
@@ -31,6 +32,7 @@ fun TopBar(
         SearchField(
             stations = stations,
             onQueryChange = onQueryChange,
+            onClearIconClick = onClearIconClick,
             query = query,
             onStationClick = onStationClick,
             modifier = Modifier.weight(1f)

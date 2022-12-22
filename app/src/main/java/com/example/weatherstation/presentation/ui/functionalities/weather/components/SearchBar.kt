@@ -48,8 +48,8 @@ fun SearchField(
     stations: List<Station>,
     query: String,
     onQueryChange: (String) -> Unit,
-    /*onSearchTrigger: (String) -> Unit,*/
-    onStationClick: (Int) -> Unit,
+    onClearIconClick: () -> Unit,
+    onStationClick: (Station) -> Unit,
     modifier: Modifier = Modifier,
     style: SearchFieldStyle = searchFieldStyle()
 ) {
@@ -61,7 +61,7 @@ fun SearchField(
             Overlay(
                 isClearIconVisible = focusState.value?.isFocused == true && query.isNotEmpty(),
                 onClearIconClick = {
-                    onQueryChange("")
+                    onClearIconClick()
                     focusManager.clearFocus()
                 },
                 style = style,
@@ -100,7 +100,7 @@ fun SearchField(
                         .fillMaxWidth()
                         .background(Color.White)
                         .clickable {
-                            onStationClick(station.id)
+                            onStationClick(station)
                         }
                 ) {
                     Text(text = station.localization, style = textMedium.copy(color = Color.Black))

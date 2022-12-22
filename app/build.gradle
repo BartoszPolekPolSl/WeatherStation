@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -96,4 +97,13 @@ dependencies {
 
     //pager
     implementation "com.google.accompanist:accompanist-pager:0.27.0"
+
+    //maps
+    implementation 'com.google.maps.android:maps-compose:2.7.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
+    implementation 'com.github.jaikeerthick:Composable-Graphs:v1.0'
+
+    implementation 'com.github.tehras:charts:beta-01'
+
 }
